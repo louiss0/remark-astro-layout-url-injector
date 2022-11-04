@@ -1,0 +1,74 @@
+version: '3.9'
+
+services:
+  
+  server:
+    
+    build: 
+    
+      context: ./
+
+      dockerfile: ./dockerfiles/server.dockerfile
+
+    ports:
+      
+      - "3000:3000"
+
+    volumes:
+      
+      - /app/node_modules
+      
+      - ./src:/app/src
+  
+  preview:
+    
+    build: 
+    
+      context: ./
+
+      dockerfile: ./dockerfiles/server.dockerfile
+
+    ports:
+      
+      - "3000:3000"
+
+    volumes:
+      
+      - /app/node_modules
+
+
+  npm:
+    
+    build: 
+      
+      context: ./
+      
+      dockerfile: ./dockerfiles/npm.dockerfile
+  
+
+    tty: true
+    
+    stdin_open: true
+    
+    volumes:
+      
+      - ./:/app
+
+  
+  
+  astro:
+    
+    build: 
+      
+      context: ./
+      
+      dockerfile: ./dockerfiles/astro.dockerfile
+  
+    tty: true
+    
+    stdin_open: true
+    
+    volumes:
+           
+      - ./:/app
+

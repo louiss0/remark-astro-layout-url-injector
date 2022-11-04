@@ -1,9 +1,7 @@
 ---
-draft:true
-
+draft: true
 ---
 
-# Post Two 
+# Post Two
 
-This is the second post 
-
+This is the second post

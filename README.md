@@ -1,83 +1,105 @@
 # Remark Auto Layout URL Injector
 
-<br />
+Astro does not have a way of automatically connecting layout URLs to every page inside of a folder. Instead they told the developer to do it.
+This package is a simple way to configure the layout's you want to use for a set of pages within a folder.
+Instead of having to tell astro to inject a layout for every page. You can configure your app to automatically inject a layout for every page within a folder.
+All you have to do is type a configuration object that contains the name of any folder within the astro project directory except for the pages one. And the name of the layout file that you are using. You are done no more having to write excessive boilerplate code.
 
-This package is called the astro url injector. It is a simple package that allows you to inject the layout url inside any markdown file that contains a simple page. You write a single configuration object that allows you to map keys to folders and values to layouts. When you configure layouts inside of astro you can be assured that url's will be injected to every file that is a markdown or mdx file.
+When you write `blog:` as a key then `layouts/post` the full url will be automatically injected for you.
 
-<br />
+That means `{ blog: 'layouts/post' }` will result in
+
+```yaml
+layout: "/src/layouts/post.astro"
+```
+
+Being the default for every page that inside of a pages/blog file.
+
+You must specify a default layout when you do that layout will be used for all pages that don't have a layout associated with it at all.
+It's called `default:`
 
 ## Installation Instructions
 
 ```
-npm install -D @louiss0/remark-astro-layout-url-injector
+npm install -D remark-astro-layout-url-injector
 ```
 
 ## Usage Instructions
 
-<br />
-
-A key is a camel cased string that represents the url of your folder. The values is where your layout folder is along with the a forward slash the the name of the file you want to use as the name of the layout file. When it comes to using layout files they must not contain a forward slash at the beginning of the value. You must not ever the `.astro` extension at all you'll get an error when trying to do that.
-<br />
+To use this library, all you need to do is add it to the `remarkPlugins:` array of the markdown configuration. Like this.
 
 ```js
-import autoLayout from "./dist";
-
-export default {
+export default defineConfig({
   markdown: {
     extendDefaultPlugins: true,
     remarkPlugins: [autoLayout({ default: "layouts/default" })],
   },
-};
+}
 ```
 
-Layout keys are restricted to camel case and must follow the file structure of the folders that are in pages.
+**When it comes to using this plugin, you must understand the following things:**
 
-| Folder Path | Camel Cased Key |
-| ----------- | --------------- |
-| blog/id     | blogId          |
-| posts/      | posts           |
-| content/    | content         |
-| ---         | ---             |
+- You don't use the `.astro` extension when it comes to mentioning the name of layout you want to use as the layout file
+- You don't use the `/src` at all when it comes to using the name of layout file at all.
+- Don't use a "/" at the beginning of the name of layout file that you are referencing
+- To refer to a folder that is a subfolder of another folder you use the name of it's parent folder and the name of itself erasing `/`
+  - You instead use a camel cased version of that word instead of a folder Path
+- You don't use pages at all when mentioning folders to use it will be ignored by this plugin.
+- Your pages folders must only use dashes to separate words not underscores or any other symbols
 
-You must assign a default key to the layoutsMap It will the the layout that is used for all pages that don't have a layout defined.
+If you follow the following rules when it comes to using this plugin you should be fine. I tried to make this library so that you don't have to do repetitive things. And just focus on what you need to do instead of writing boilerplate. the [Configuration Mental Map](#configuration-mental-map) section below should give you a picture of how to name the keys of your objects
 
-```
-// This is the object you must pass to the function if you have nothing else to do
-
-{default: ""}
-
-
-```
-
-You can override any of the configuration options that you have set don't be afraid to go deep into a file structure. You don't need to have a specific place where you put your layouts all you need to do is just.
-
-- Put them in the src folder.
-- Don't use a forward slash in the value path
-- Don't use a pages key that will simply be ignored
-- Don't use a `.astro` extension in the value path
-- Remember to always specify a default layout
-- Don't use the pages folder at all as a value path.
-
-## Typical Structure
-
-**Folders in astro project src**
 <br />
 
+## Configuration Mental Map
+
+When you want to reference folders in your project you need to **Camel Case** naming in your folder name keys. The table below shows what I mean.
+
+| Folder Path           | Camel Case Key       |
+| --------------------- | -------------------- |
+| posts                 | posts:               |
+| posts/react           | postsReact:          |
+| blog/food             | blogFood:            |
+| react/design-patterns | reactDesignPatterns: |
+| vue/design--patterns  | vueDesignPatterns:   |
+
+<br />
+
+## Folder Structure Example
+
+Let's look at an example folder structure for this plugin. In this example we are looking inside of the src file
+
 ```
-    layouts---|--post.astro
-              |__default.astro
+ pages---|blog|
+             |
+             |
+             |___|react|
+             |
+             |___|typescript|
 
-    pages---|--blog---|--post-one.md
-        |             |__post-two.md
-        |
-        |__index.astro
+|layouts|---|
+            |
+            |___post.astro
+            |
+            |___react-post.astro
+            |
+            |___typescript-post.astro
 ```
 
-**Configuration**
+**This is now you'd configure the layouts**
 
-```ts
-{
-    default: "/layouts/default",
-    blog: "/layouts/post"
-}
+```js
+
+   {
+    extendDefaultPlugins: true,
+    remarkPlugins: [
+      autoLayout({
+      default: "layouts/post"
+      blogReact: "layouts/react-post"
+      blogTypescript: "layouts/typescript-post"
+
+      })
+    ],
+  },
+
 ```

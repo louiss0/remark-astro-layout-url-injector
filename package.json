@@ -1,5 +1,5 @@
 {
-  "name": "@louiss0/remark-astro-layout-url-injector",
+  "name": "remark-astro-layout-url-injector",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -7,19 +7,23 @@
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"      
+      "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist", "lib"],
-  "version": "0.0.1",
+  "files": [
+    "dist",
+    "lib"
+  ],
+  "version": "1.0.0",
   "scripts": {
     "start": "astro dev",
     "dev": "tsup lib/index.ts --watch",
     "build": "tsup lib/index.ts --format cjs,esm --dts --clean",
-    "release": "npm run build && npm publish"
+    "release": "npm login && npm publish"
   },
   "devDependencies": {
-    "astro": "^1.6.3"
+    "astro": "^1.6.3",
+    "remark-astro-layout-url-injector": "^1.0.0"
   },
   "dependencies": {
     "tsup": "^6.4.0"

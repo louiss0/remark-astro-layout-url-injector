@@ -103,8 +103,8 @@ export default function astroMarkdownLayoutUrlInjector(layoutsMap: AstroAutoLayo
 
   function capitalizeEveryStringButTheFirstStringInTheArray(): (value: string, index: number, array: string[]) => string {
     return (value, index) => index === 0
-      ? value
-      : `${value.substring(0, 1).toUpperCase()}${value.substring(1)}`
+      ? value.replace(/(-+)/, "")
+      : `${value.substring(0, 1).toUpperCase()}${value.substring(1)}`.replace(/(-+)/, "")
   }
 
   function checkIfPascalCasedStringIsEqualToKeyInLayoutsMapIfTrueSetTheFrontMatterLayoutPropertyToItsValue(pascalCasedStringCreatedByPreviousExtractedStringBySplittingWithAForwardSlash: string, file: VFile): (value: [string, string], index: number, array: [string, string][]) => void {

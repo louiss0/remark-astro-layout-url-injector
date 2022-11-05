@@ -1,6 +1,6 @@
 import { defineConfig } from "astro/config";
 
-import autoLayout from "./dist";
+import autoLayout from "remark-astro-layout-url-injector";
 
 // https://astro.build/config
 export default defineConfig({

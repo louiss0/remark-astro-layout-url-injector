@@ -14,7 +14,7 @@
     "dist",
     "lib"
   ],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "start": "astro dev",
     "dev": "tsup lib/index.ts --watch",

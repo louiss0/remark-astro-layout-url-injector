@@ -1,6 +1,5 @@
 ---
 title: Post One
-draft: true
 ---
 
 # Post one

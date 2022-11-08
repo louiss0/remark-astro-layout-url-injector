@@ -18,6 +18,7 @@
   "scripts": {
     "start": "astro dev",
     "dev": "tsup lib/index.ts --watch",
+    "prod": "astro build",
     "build": "tsup lib/index.ts --format cjs,esm --dts --clean",
     "release": "npm login && npm publish"
   },
@@ -27,5 +28,18 @@
   },
   "dependencies": {
     "tsup": "^6.4.0"
-  }
+  },
+  "repository": {
+    "url": "https://github.com/louiss0/remark-astro-layout-url-injector"
+  },
+  "author": {
+    "name": "Shelton Louis"
+  },
+  "keywords": [
+    "markdown",
+    "html",
+    "remark",
+    "astro",
+    "layouts"
+  ]
 }

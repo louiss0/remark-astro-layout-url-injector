@@ -43,9 +43,8 @@ export default defineConfig({
 - You don't use the `/src` at all when it comes to using the name of layout file at all.
 - Don't use a "/" at the beginning of the name of layout file that you are referencing
 - To refer to a folder that is a subfolder of another folder you use the name of it's parent folder and the name of itself erasing `/`
-  - You instead use a camel cased version of that word instead of a folder Path
+- You instead use a camel cased version of that word instead of a folder Path
 - You don't use pages at all when mentioning folders to use it will be ignored by this plugin.
-- Your pages folders must only use dashes to separate words not underscores or any other symbols
 
 If you follow the following rules when it comes to using this plugin you should be fine. I tried to make this library so that you don't have to do repetitive things. And just focus on what you need to do instead of writing boilerplate. the [Configuration Mental Map](#configuration-mental-map) section below should give you a picture of how to name the keys of your objects
 

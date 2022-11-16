@@ -3,8 +3,8 @@ import {
   throwIfStringHasAForwardSlashAtTheBeginning,
 } from "./error";
 import {
-  capitalizeTheStringOnlyIfTheNumberIsNotZeroAndReplaceEveryDashWithAnEmptyString,
   findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray,
+  capitalizeTheStringOnlyIfTheNumberIsNotZeroAndReplaceEveryDashWithAnEmptyString
   Regex,
   VFile,
 } from "./utils";
@@ -58,12 +58,11 @@ export default function astroMarkdownLayoutUrlInjector(
 
     const camelCasedStringCreatedByPreviousExtractedStringBySplittingWithAForwardSlash =
       arrayCreatedByPreviousExtractedStringBySplittingWithAForwardSlash
-        .map(
-          capitalizeTheStringOnlyIfTheNumberIsNotZeroAndReplaceEveryDashWithAnEmptyString
-        )
+        .map(capitalizeEveryStringButTheFirstStringInTheArray())
         .join("");
 
     const layoutsMapKeys = Object.keys(layoutsMap);
+
     const theCamelCasedStringThatIsEqualToTheOneInTheStringArray =
       findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray(
         camelCasedStringCreatedByPreviousExtractedStringBySplittingWithAForwardSlash,

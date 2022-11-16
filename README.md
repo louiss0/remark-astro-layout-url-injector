@@ -61,6 +61,21 @@ When you want to reference folders in your project you need to **Camel Case** na
 | blog/food             | blogFood:            |
 | react/design-patterns | reactDesignPatterns: |
 | vue/design--patterns  | vueDesignPatterns:   |
+| angular/design__patterns  | angularDesignPatterns:   |
+
+This tables is trying to say that you must create a capitalized word for every slash `/`  underscore `_` or dashes that you put as the folder path. 
+
+This means the following 
+
+foo/remember--jack/for-good => fooRememberJackForGood
+
+foo/remember__jack/for-_good => fooRememberJackForGood
+
+foo/remember/jack/for/good => fooRememberJackForGood
+
+These results are the same don't forget that. 
+
+! the `=>` means is the expected camelCasedString
 
 <br />
 

@@ -1,5 +1,5 @@
 import { throwIfStringHasADotAnythingInItsName, throwIfStringHasAForwardSlashAtTheBeginning } from "./error"
-import { capitalizeEveryStringButTheFirstStringInTheArray, checkIfPascalCasedStringIsEqualToKeyInLayoutsMapIfTrueSetTheFrontMatterLayoutPropertyToItsValue, findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray, Regex, VFile } from "./utils"
+import { findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray, Regex, VFile,capitalizeTheStringOnlyIfTheNumberIsNotZeroAndReplaceEveryDashWithAnEmptyString } from "./utils"
 
 type FolderName = string
 type LayoutPath = string
@@ -51,12 +51,12 @@ export default function astroMarkdownLayoutUrlInjector(layoutsMap: AstroAutoLayo
 
     const arrayCreatedByPreviousExtractedStringBySplittingWithAForwardSlash =
       secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash
-        .split("/")
+        .split(Regex.CAPTURE_FORWARD_SLASH_OR_DASH_OR_UNDERSCORE)
         .filter((string) => !!string === true)
 
     const camelCasedStringCreatedByPreviousExtractedStringBySplittingWithAForwardSlash=
       arrayCreatedByPreviousExtractedStringBySplittingWithAForwardSlash
-        .map(capitalizeEveryStringButTheFirstStringInTheArray())
+        .map(capitalizeTheStringOnlyIfTheNumberIsNotZeroAndReplaceEveryDashWithAnEmptyString)
         .join("")
     
 

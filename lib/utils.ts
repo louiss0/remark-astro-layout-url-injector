@@ -3,6 +3,7 @@ const Regex = {
     /(\/src\/.+\.mdx?)/,
   STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER:
     /(?=\/src\/pages\/(.+\/))/,
+  CAPTURE_FORWARD_SLASH_OR_DASH_OR_UNDERSCORE: /(?:\/|\-+|_+)/
 } as const;
 
 interface VFile {

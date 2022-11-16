@@ -83,7 +83,7 @@ describe("capitalizeTheStringOnlyIfTheNumberIsNotZeroAndReplaceEveryDashWithAnEm
     const expectedResult = "blogNuxt";
 
     const inputMatch = inputString.match(
-      Regex.STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER
+      Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
     )!;
 
     const extractedFolderName = inputMatch[1];
@@ -148,7 +148,7 @@ describe("Strings are extracted properly from the regex's used", () => {
 
   it("matches the STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER", () => {
     const result = inputStringWithFolderBeyondPages.match(
-      Regex.STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER
+      Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
     );
 
     expectTypeOf(result).toBeArray();
@@ -181,7 +181,7 @@ describe("Strings are extracted properly from the regex's used", () => {
 
   it("STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER has the at the second index", () => {
     const result = inputStringWithFolderBeyondPages.match(
-      Regex.STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER
+      Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
     )!;
     expect(result).toHaveLength(2);
     expect(result[1]).not.toBe(null);
@@ -196,7 +196,7 @@ describe("If a camel cased string is created based on a match", () => {
     const expectedResult = "blogNuxt";
 
     const inputMatch = inputString.match(
-      Regex.STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER
+      Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
     )!;
 
     const extractedFolderName = inputMatch[1];

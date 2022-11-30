@@ -14,12 +14,14 @@ type AstroAutoLayoutConfig = {
   };
 };
 
-const Regex = {
+export const Regex = {
   STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX:
     /(?=\/(?:pages|content)(\/.+\.mdx?))/,
   STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH:
     /(?=\/(?:pages|content)\/(.+\/))/,
 } as const;
+
+
 
 interface VFile {
   data: {
@@ -50,7 +52,7 @@ export default function astroMarkdownLayoutUrlInjector({
     const currentFile = file.history[0];
     const stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx =
       currentFile.match(
-        Regex.STRING_WITH_SRC_IN_FRONT_ANY_CHARACTERS_IN_THE_MIDDLE_AND_EITHER_A_DOT_MDX_OR_MD_AT_THE_END
+        Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX
       )?.[0];
 
     const arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =

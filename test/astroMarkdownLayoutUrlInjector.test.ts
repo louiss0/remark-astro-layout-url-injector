@@ -26,7 +26,7 @@ describe("astroMarkdownLayoutUrlInjector works properly", () => {
     const defaultLayout = ".foo";
 
     expect(
-      astroMarkdownLayoutUrlInjector({ default: defaultLayout })()
+      astroMarkdownLayoutUrlInjector({ layoutsMap: {default: defaultLayout} })()
     ).toThrow(
       getExpectedErrorMessageForThrowIfStringHasAForwardSlashAtTheBeginning(
         defaultLayout
@@ -38,7 +38,7 @@ describe("astroMarkdownLayoutUrlInjector works properly", () => {
     const defaultLayout = "/ok";
 
     expect(
-      astroMarkdownLayoutUrlInjector({ default: defaultLayout })()
+      astroMarkdownLayoutUrlInjector({ layoutsMap: {default: defaultLayout } })()
     ).toThrow(
       getExpectedErrorMessageForThrowIfStringHasADotAnythingInItsName(
         defaultLayout

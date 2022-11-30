@@ -1,6 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import astroMarkdownLayoutUrlInjector from '../lib';
-import { Regex } from '../lib/utils';
+import astroMarkdownLayoutUrlInjector, { Regex } from '../lib';
 
 const getExpectedErrorMessageForThrowIfStringHasAForwardSlashAtTheBeginning = (
   string: string
@@ -27,7 +26,7 @@ describe('astroMarkdownLayoutUrlInjector works properly', () => {
     const defaultLayout = '.foo';
 
     expect(
-      astroMarkdownLayoutUrlInjector({ default: defaultLayout })()
+      astroMarkdownLayoutUrlInjector({ layoutsMap:{default: defaultLayout} })()
     ).toThrow(
       getExpectedErrorMessageForThrowIfStringHasAForwardSlashAtTheBeginning(
         defaultLayout
@@ -39,7 +38,9 @@ describe('astroMarkdownLayoutUrlInjector works properly', () => {
     const defaultLayout = '/ok';
 
     expect(
-      astroMarkdownLayoutUrlInjector({ default: defaultLayout })()
+      astroMarkdownLayoutUrlInjector({ 
+        layoutsMap:
+        {default: defaultLayout} })()
     ).toThrow(
       getExpectedErrorMessageForThrowIfStringHasADotAnythingInItsName(
         defaultLayout
@@ -51,14 +52,14 @@ describe('astroMarkdownLayoutUrlInjector works properly', () => {
 describe("Strings are extracted properly from the regex's used", () => {
   const inputString = '/src/pages/post-two.md';
 
-  const expectedFileOutput = inputString;
+  const expectedFileOutput = '/post-two.md';
   const expectedFolderOutput = 'foo/';
 
   const inputStringWithFolderBeyondPages = `/src/pages/${expectedFolderOutput}post-two.md`;
 
-  it('matches the STRING_WITH_SRC_IN_FRONT_ANY_CHARACTERS_IN_THE_MIDDLE_AND_EITHER_A_DOT_MDX_OR_MD_AT_THE_END ', () => {
+  it('matches the STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX ', () => {
     const result = inputString.match(
-      Regex.STRING_WITH_SRC_IN_FRONT_ANY_CHARACTERS_IN_THE_MIDDLE_AND_EITHER_A_DOT_MDX_OR_MD_AT_THE_END
+      Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX
     );
 
     expectTypeOf(result).toBeArray();
@@ -68,9 +69,9 @@ describe("Strings are extracted properly from the regex's used", () => {
     expect(result).toContain(expectedFileOutput);
   });
 
-  it('matches the STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER', () => {
+  it('matches the STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH', () => {
     const result = inputStringWithFolderBeyondPages.match(
-      Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
+      Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
     );
 
     expectTypeOf(result).toBeArray();
@@ -80,30 +81,29 @@ describe("Strings are extracted properly from the regex's used", () => {
     expect(result).toContain(expectedFolderOutput);
   });
 
-  it('STRING_WITH_SRC_IN_FRONT_ANY_CHARACTERS_IN_THE_MIDDLE_AND_EITHER_A_DOT_MDX_OR_MD_AT_THE_END has the match at at the zero index', () => {
+  it('STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX has the match at at the zero index', () => {
     const result = inputString.match(
-      Regex.STRING_WITH_SRC_IN_FRONT_ANY_CHARACTERS_IN_THE_MIDDLE_AND_EITHER_A_DOT_MDX_OR_MD_AT_THE_END
+      Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX
     )!;
 
-    expect(result).toHaveLength(2);
 
-    expect(result[0]).not.toBe(null);
+    expect(result[1]).not.toBe(null);
 
-    expect(result[0]).toBe(expectedFileOutput);
+    expect(result[1]).toBe(expectedFileOutput);
   });
 
-  // it("STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER has the match at the zero index", () => {
+  // it("STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH has the match at the zero index", () => {
   //   const result = inputStringWithFolderBeyondPages.match(
-  //     Regex.STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER
+  //     Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
   //   );
   //   expect(result).toHaveLength(2);
   //   expect(result[0]).not.toBe(null);
   //   expect(result[0]).toBe(expectedFolderOutput);
   // });
 
-  it('STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER has the at the second index', () => {
+  it('STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH has the at the second index', () => {
     const result = inputStringWithFolderBeyondPages.match(
-      Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
+      Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
     )!;
     expect(result).toHaveLength(2);
     expect(result[1]).not.toBe(null);
@@ -121,7 +121,7 @@ describe('A proper layout url can be created properly', () => {
 
   it('File layout url is  properly created based on whether or not the key in a layout map matches the string', () => {
     const matchArray = inputStringWithFolderBeyondPages.match(
-      Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
+      Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
     )!;
 
     const extractedString = matchArray[1];

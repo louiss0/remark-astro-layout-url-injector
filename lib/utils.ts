@@ -18,26 +18,9 @@ interface VFile {
   value: string;
 }
 
-function capitalizeTheStringOnlyIfTheNumberIsNotZero(
-  value: string,
-  number: number
-): string {
-  return number === 0
-    ? value
-    : `${value.substring(0, 1).toUpperCase()}${value.substring(1)}`;
-}
-
-function findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray(
-  camelCasedString: string,
-  stringArray: Array<string>
-) {
-  return stringArray.find((string) => string === camelCasedString);
-}
 
 export type { VFile };
 
 export {
-  capitalizeTheStringOnlyIfTheNumberIsNotZero as capitalizeTheStringOnlyIfTheNumberIsNotZeroAndReplaceEveryDashWithAnEmptyString,
-  findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray,
   Regex,
 };

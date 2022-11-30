@@ -26,7 +26,7 @@ describe("Strings are extracted properly from the regex's used", () => {
 
   it("matches the STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER", () => {
     const result = inputStringWithFolderBeyondPages.match(
-      Regex.STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER
+      Regex.
     );
 
     expectTypeOf(result).toBeArray();

@@ -21,8 +21,6 @@ export const Regex = {
     /(?=\/(?:pages|content)\/(.+\/))/,
 } as const;
 
-
-
 interface VFile {
   data: {
     astro: {
@@ -53,12 +51,14 @@ export default function astroMarkdownLayoutUrlInjector({
     const stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx =
       currentFile.match(
         Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX
-      )?.[0];
+      )?.[1];
 
     const arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =
-      stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx?.match(
-        Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
-      );
+      stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx
+        ? currentFile?.match(
+            Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
+          )
+        : null;
 
     if (
       !arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash
@@ -69,7 +69,7 @@ export default function astroMarkdownLayoutUrlInjector({
 
     const secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =
       arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash[1];
-
+    
     const accsessedValueFromLayoutsMapOrTheDefaultValue =
       layoutsMap[
         secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash

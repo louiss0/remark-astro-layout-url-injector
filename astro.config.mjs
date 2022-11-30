@@ -12,7 +12,7 @@ export default defineConfig({
         layoutsMap:{
           default: "layouts/default",
           "posts/": "layouts/posts",
-          "posts/react": "layouts/posts",
+          "posts/react/": "layouts/posts",
         }
     }),
     ],

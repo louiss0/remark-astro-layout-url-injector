@@ -1,24 +1,42 @@
 import {
   throwIfStringHasADotAnythingInItsName,
   throwIfStringHasAForwardSlashAtTheBeginning,
-} from "./error";
-import {
- 
-  Regex,
-  VFile,
-} from "./utils";
+} from './error';
 
 type FolderName = string;
 type LayoutPath = string;
 
-interface AstroAutoLayoutOptions {
-  default: string;
-  [key: FolderName]: LayoutPath;
+type AstroAutoLayoutConfig = {
+  sourceFolder?: string;
+  layoutsMap: {
+    default: string;
+    [key: FolderName]: LayoutPath;
+  };
+};
+
+const Regex = {
+  STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX:
+    /(?=\/(?:pages|content)(\/.+\.mdx?))/,
+  STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH:
+    /(?=\/(?:pages|content)\/(.+\/))/,
+} as const;
+
+interface VFile {
+  data: {
+    astro: {
+      frontmatter: Record<string, unknown>;
+    };
+  };
+  messages: Array<string>;
+  history: Array<string>;
+  cwd: string;
+  value: string;
 }
 
-export default function astroMarkdownLayoutUrlInjector(
-  layoutsMap: AstroAutoLayoutOptions
-) {
+export default function astroMarkdownLayoutUrlInjector({
+  sourceFolder = 'src/',
+  layoutsMap,
+}: AstroAutoLayoutConfig) {
   return () => (_: unknown, file: VFile) => {
     Object.values(layoutsMap).forEach((value) => {
       throwIfStringHasADotAnythingInItsName(value);
@@ -37,22 +55,24 @@ export default function astroMarkdownLayoutUrlInjector(
 
     const arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =
       stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx?.match(
-        Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
+        Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
       );
 
     if (
       !arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash
     ) {
-      file.data.astro.frontmatter.layout = `/src/${layoutsMap.default}.astro`;
+      file.data.astro.frontmatter.layout = `/${sourceFolder}${layoutsMap.default}.astro`;
       return;
     }
 
     const secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =
       arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash[1];
 
-    file.data.astro.frontmatter.layout = 
-    `/src/${layoutsMap[secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash] ?? layoutsMap.default}.astro`;
-    
-    
+    const accsessedValueFromLayoutsMapOrTheDefaultValue =
+      layoutsMap[
+        secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash
+      ] ?? layoutsMap.default;
+
+    file.data.astro.frontmatter.layout = `/${sourceFolder}${accsessedValueFromLayoutsMapOrTheDefaultValue}.astro`;
   };
 }

@@ -32,10 +32,10 @@ export default defineConfig({
     extendDefaultPlugins: true,
     remarkPlugins: [
       autoLayout({
-      layoutsMap:{ 
+      layoutsMap:{
         default: "layouts/default"
-        } 
-      
+        }
+
       }
       )
     ],
@@ -46,44 +46,47 @@ export default defineConfig({
 **When it comes to using this plugin, you must understand the following things:**
 
 - You don't use the `.astro` extension when it comes to mentioning the name of layout you want to use as the layout file
-- You don't use the the source directory at all when it comes to using the name of layout file at all.
-- Don't use a "/" at the beginning of the name of layout file that you are referencing
-- To refer to a folder that is a subfolder of another folder you use the name of it's parent folder and the name of itself erasing `/`
-- You instead use a camel cased version of that word instead of a folder Path
-- You don't use pages or content  at all when mentioning folders to use they will be ignored by this plugin.
 
-- To pass in the source folder that you use the `sourceFolder:` key in the config 
+- You don't use the the source directory at all when it comes to using the name of layout file at all.
+
+- Don't use a "/" at the beginning of the name of layout file that you are referencing
+
+- You don't use `/pages` or `/content` at all when mentioning folders to use they will be ignored by this plugin.
+
+- To pass in the source folder that you use the `sourceFolder:` key in the config
+
   - The sourceFolder must start with a `/`
 
+- By default `sourceFolder:` equals `/src`
 
-<br />
+## Configuration
 
-## Configuration Mental Map
+There are only two things that you can configure the source folder and the layouts used for each set of folders.
 
-When you want to reference folders in your project you need to **Camel Case** naming in your folder name keys. The table below shows what I mean.
+The source folder is the directory that you use for your application code.
 
-| Folder Path           | Camel Case Key       |
-| --------------------- | -------------------- |
-| posts                 | posts:               |
-| posts/react           | postsReact:          |
-| blog/food             | blogFood:            |
-| react/design-patterns | reactDesignPatterns: |
-| vue/design--patterns  | vueDesignPatterns:   |
-| angular/design__patterns  | angularDesignPatterns:   |
+The layoutsMap a key value pair of the layouts used for your application.
 
-This tables is trying to say that you must create a capitalized word for every slash `/`  underscore `_` or dashes that you put as the folder path. 
+- You must specify a `default:` key in the layoutsMap
 
-This means the following 
+  - The layout value specified in that one will be used for all files under `/pages` and `/content` recursively unless you override the `default:`
 
-foo/remember--jack/for-good => fooRememberJackForGood
+- The keys are the folders under either `/pages` or `/content`
 
-foo/remember__jack/for-_good => fooRememberJackForGood
+- You don't use `/` for the folder name at the beginning of the path you do it at the end of the path for both key and value.
 
-foo/remember/jack/for/good => fooRememberJackForGood
+  - Ex `{"posts/": "layouts/post" }`
 
-These results are the same don't forget that. 
+\
+When it comes to crafting the url for a layout this plugin uses an absolute path to the construct each url.
+It uses the `sourceFolder` property as the beginning of the path.
+It appends `.astro` for you and uses the values of a layoutMap to construct the middle path.
 
-! the `=>` means is the expected camelCasedString
+When you type {sourceFolder:"/docs", layoutsMap: {default: "layouts/default"} }
+
+This url is created
+
+/docs/layouts/default.astro`
 
 <br />
 
@@ -117,8 +120,8 @@ Let's look at an example folder structure for this plugin. In this example we ar
     remarkPlugins: [
       autoLayout({
       default: "layouts/post"
-      blogReact: "layouts/react-post"
-      blogTypescript: "layouts/typescript-post"
+      "blog/react/": "layouts/react-post"
+      "blog/typescript/": "layouts/typescript-post"
 
       })
     ],

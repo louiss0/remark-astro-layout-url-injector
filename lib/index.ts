@@ -3,8 +3,7 @@ import {
   throwIfStringHasAForwardSlashAtTheBeginning,
 } from "./error";
 import {
-  findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray,
-  capitalizeTheStringOnlyIfTheNumberIsNotZeroAndReplaceEveryDashWithAnEmptyString
+ 
   Regex,
   VFile,
 } from "./utils";

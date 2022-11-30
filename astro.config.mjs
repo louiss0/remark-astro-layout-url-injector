@@ -8,10 +8,13 @@ export default defineConfig({
     extendDefaultPlugins: true,
     remarkPlugins: [
       autoLayout({
-        default: "layouts/default",
-        posts: "layouts/posts",
-        postsReact: "layouts/posts",
-      }),
+        
+        layoutsMap:{
+          default: "layouts/default",
+          "posts/": "layouts/posts",
+          "posts/react/": "layouts/posts",
+        }
+    }),
     ],
   },
   server: {

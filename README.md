@@ -5,15 +5,13 @@ This package is a simple way to configure the layout's you want to use for a set
 Instead of having to tell astro to inject a layout for every page. You can configure your app to automatically inject a layout for every page within a folder.
 All you have to do is type a configuration object that contains the name of any folder within the astro project directory except for the pages one. And the name of the layout file that you are using. You are done no more having to write excessive boilerplate code.
 
-When you write `blog:` as a key then `layouts/post` the full url will be automatically injected for you.
+When you write `blog/` as a key then `layouts/post` the full url will be automatically injected for you.
 
-That means `{ blog: 'layouts/post' }` will result in
+That means `{ layoutsMap:{ "blog/": 'layouts/post'} }` will result in
 
 ```yaml
 layout: "/src/layouts/post.astro"
 ```
-
-Being the default for every page that inside of a pages/blog file.
 
 You must specify a default layout when you do that layout will be used for all pages that don't have a layout associated with it at all.
 It's called `default:`
@@ -32,7 +30,15 @@ To use this library, all you need to do is add it to the `remarkPlugins:` array 
 export default defineConfig({
   markdown: {
     extendDefaultPlugins: true,
-    remarkPlugins: [autoLayout({ default: "layouts/default" })],
+    remarkPlugins: [
+      autoLayout({
+      layoutsMap:{ 
+        default: "layouts/default"
+        } 
+      
+      }
+      )
+    ],
   },
 }
 ```
@@ -40,13 +46,15 @@ export default defineConfig({
 **When it comes to using this plugin, you must understand the following things:**
 
 - You don't use the `.astro` extension when it comes to mentioning the name of layout you want to use as the layout file
-- You don't use the `/src` at all when it comes to using the name of layout file at all.
+- You don't use the the source directory at all when it comes to using the name of layout file at all.
 - Don't use a "/" at the beginning of the name of layout file that you are referencing
 - To refer to a folder that is a subfolder of another folder you use the name of it's parent folder and the name of itself erasing `/`
 - You instead use a camel cased version of that word instead of a folder Path
-- You don't use pages at all when mentioning folders to use it will be ignored by this plugin.
+- You don't use pages or content  at all when mentioning folders to use they will be ignored by this plugin.
 
-If you follow the following rules when it comes to using this plugin you should be fine. I tried to make this library so that you don't have to do repetitive things. And just focus on what you need to do instead of writing boilerplate. the [Configuration Mental Map](#configuration-mental-map) section below should give you a picture of how to name the keys of your objects
+- To pass in the source folder that you use the `sourceFolder:` key in the config 
+  - The sourceFolder must start with a `/`
+
 
 <br />
 

@@ -1,25 +1,42 @@
 import {
   throwIfStringHasADotAnythingInItsName,
   throwIfStringHasAForwardSlashAtTheBeginning,
-} from "./error";
-import {
-  findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray,
-  capitalizeTheStringOnlyIfTheNumberIsNotZeroAndReplaceEveryDashWithAnEmptyString
-  Regex,
-  VFile,
-} from "./utils";
+} from './error';
 
 type FolderName = string;
 type LayoutPath = string;
 
-interface AstroAutoLayoutOptions {
-  default: string;
-  [key: FolderName]: LayoutPath;
+type AstroAutoLayoutConfig = {
+  sourceFolder?: string;
+  layoutsMap: {
+    default: string;
+    [key: FolderName]: LayoutPath;
+  };
+};
+
+export const Regex = {
+  STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX:
+    /(?=\/(?:pages|content)(\/.+\.mdx?))/,
+  STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH:
+    /(?=\/(?:pages|content)\/(.+\/))/,
+} as const;
+
+interface VFile {
+  data: {
+    astro: {
+      frontmatter: Record<string, unknown>;
+    };
+  };
+  messages: Array<string>;
+  history: Array<string>;
+  cwd: string;
+  value: string;
 }
 
-export default function astroMarkdownLayoutUrlInjector(
-  layoutsMap: AstroAutoLayoutOptions
-) {
+export default function astroMarkdownLayoutUrlInjector({
+  sourceFolder = 'src/',
+  layoutsMap,
+}: AstroAutoLayoutConfig) {
   return () => (_: unknown, file: VFile) => {
     Object.values(layoutsMap).forEach((value) => {
       throwIfStringHasADotAnythingInItsName(value);
@@ -33,47 +50,31 @@ export default function astroMarkdownLayoutUrlInjector(
     const currentFile = file.history[0];
     const stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx =
       currentFile.match(
-        Regex.STRING_WITH_SRC_IN_FRONT_ANY_CHARACTERS_IN_THE_MIDDLE_AND_EITHER_A_DOT_MDX_OR_MD_AT_THE_END
-      )?.[0];
+        Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX
+      )?.[1];
 
     const arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =
-      stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx?.match(
-        Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
-      );
+      stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx
+        ? currentFile?.match(
+            Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
+          )
+        : null;
 
     if (
       !arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash
     ) {
-      file.data.astro.frontmatter.layout = `/src/${layoutsMap.default}.astro`;
+      file.data.astro.frontmatter.layout = `/${sourceFolder}${layoutsMap.default}.astro`;
       return;
     }
 
     const secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =
       arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash[1];
+    
+    const accsessedValueFromLayoutsMapOrTheDefaultValue =
+      layoutsMap[
+        secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash
+      ] ?? layoutsMap.default;
 
-    const arrayCreatedByPreviousExtractedStringBySplittingWithAForwardSlash =
-      secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash
-        .split("/")
-        .filter((string) => !!string === true);
-
-    const camelCasedStringCreatedByPreviousExtractedStringBySplittingWithAForwardSlash =
-      arrayCreatedByPreviousExtractedStringBySplittingWithAForwardSlash
-        .map(capitalizeEveryStringButTheFirstStringInTheArray())
-        .join("");
-
-    const layoutsMapKeys = Object.keys(layoutsMap);
-
-    const theCamelCasedStringThatIsEqualToTheOneInTheStringArray =
-      findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray(
-        camelCasedStringCreatedByPreviousExtractedStringBySplittingWithAForwardSlash,
-        layoutsMapKeys
-      );
-
-    const valueFromTheLayoutsMapBasedOnTheCamelCasedStringThatIsEqualToTheOneInTheStringArray =
-      theCamelCasedStringThatIsEqualToTheOneInTheStringArray
-        ? layoutsMap[theCamelCasedStringThatIsEqualToTheOneInTheStringArray]
-        : layoutsMap.default;
-
-    file.data.astro.frontmatter.layout = `/src/${valueFromTheLayoutsMapBasedOnTheCamelCasedStringThatIsEqualToTheOneInTheStringArray}.astro`;
+    file.data.astro.frontmatter.layout = `/${sourceFolder}${accsessedValueFromLayoutsMapOrTheDefaultValue}.astro`;
   };
 }

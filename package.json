@@ -13,10 +13,10 @@
   "files": [
     "dist"
   ],
-  "version": "1.1.3",
+  "version": "2.0.0",
   "scripts": {
     "start": "astro dev",
-    "dev": "vitest",
+    "dev": "vitest --ui --open",
     "prod": "astro build",
     "build": "tsup lib/index.ts --format cjs,esm --dts --clean",
     "release": "npm login && npm publish"

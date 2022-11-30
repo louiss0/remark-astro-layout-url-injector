@@ -50,29 +50,9 @@ export default function astroMarkdownLayoutUrlInjector(
     const secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =
       arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash[1];
 
-    const arrayCreatedByPreviousExtractedStringBySplittingWithAForwardSlash =
-      secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash
-        .split("/")
-        .filter((string) => !!string === true);
-
-    const camelCasedStringCreatedByPreviousExtractedStringBySplittingWithAForwardSlash =
-      arrayCreatedByPreviousExtractedStringBySplittingWithAForwardSlash
-        .map(capitalizeEveryStringButTheFirstStringInTheArray())
-        .join("");
-
-    const layoutsMapKeys = Object.keys(layoutsMap);
-
-    const theCamelCasedStringThatIsEqualToTheOneInTheStringArray =
-      findTheCamelCasedStringThatIsEqualToTheOneInTheStringArray(
-        camelCasedStringCreatedByPreviousExtractedStringBySplittingWithAForwardSlash,
-        layoutsMapKeys
-      );
-
-    const valueFromTheLayoutsMapBasedOnTheCamelCasedStringThatIsEqualToTheOneInTheStringArray =
-      theCamelCasedStringThatIsEqualToTheOneInTheStringArray
-        ? layoutsMap[theCamelCasedStringThatIsEqualToTheOneInTheStringArray]
-        : layoutsMap.default;
-
-    file.data.astro.frontmatter.layout = `/src/${valueFromTheLayoutsMapBasedOnTheCamelCasedStringThatIsEqualToTheOneInTheStringArray}.astro`;
+    file.data.astro.frontmatter.layout = 
+    `/src/${layoutsMap[secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash] ?? layoutsMap.default}.astro`;
+    
+    
   };
 }

@@ -26,7 +26,7 @@ describe("Strings are extracted properly from the regex's used", () => {
 
   it("matches the STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER", () => {
     const result = inputStringWithFolderBeyondPages.match(
-      Regex.
+      Regex.STRING_AHEAD_OF_SLASH_SRC_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
     );
 
     expectTypeOf(result).toBeArray();
@@ -57,12 +57,5 @@ describe("Strings are extracted properly from the regex's used", () => {
   //   expect(result[0]).toBe(expectedFolderOutput);
   // });
 
-  it("STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER has the at the second index", () => {
-    const result = inputStringWithFolderBeyondPages.match(
-      Regex.STRING_WITH_SLASH_SRC_IN_FRONT_NEXT_TO_IT_SLASH_PAGES_AND_ANY_OTHER_CHARACTERS_AFTER
-    )!;
-    expect(result).toHaveLength(2);
-    expect(result[1]).not.toBe(null);
-    expect(result[1]).toBe(expectedFolderOutput);
-  });
+  
 });

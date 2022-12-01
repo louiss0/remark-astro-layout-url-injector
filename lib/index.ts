@@ -1,7 +1,7 @@
 import {
   throwIfStringHasADotAnythingInItsName,
   throwIfStringHasAForwardSlashAtTheBeginning,
-} from './error';
+} from "./error";
 
 type FolderName = string;
 type LayoutPath = string;
@@ -15,10 +15,9 @@ type AstroAutoLayoutConfig = {
 };
 
 export const Regex = {
-  STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX:
-    /(?=\/(?:pages|content)(\/.+\.mdx?))/,
-  STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH:
-    /(?=\/(?:pages|content)\/(.+\/))/,
+  STRING_AHEAD_OF_SLASH_PAGES_THAT_ENDS_WITH_DOT_MD_OR_MDX:
+    /(?=\/(?:pages)(\/.+\.mdx?))/,
+  STRING_AHEAD_OF_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH: /(?=\/(?:pages)\/(.+\/))/,
 } as const;
 
 interface VFile {
@@ -33,8 +32,11 @@ interface VFile {
   value: string;
 }
 
+const firstIndex = 0,
+  secondIndex = 1;
+
 export default function astroMarkdownLayoutUrlInjector({
-  sourceFolder = 'src/',
+  sourceFolder = "src/",
   layoutsMap,
 }: AstroAutoLayoutConfig) {
   return () => (_: unknown, file: VFile) => {
@@ -47,16 +49,16 @@ export default function astroMarkdownLayoutUrlInjector({
 
     if (frontMatterLayout) return;
 
-    const currentFile = file.history[0];
+    const currentFile = file.history[firstIndex];
     const stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx =
       currentFile.match(
-        Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX
+        Regex.STRING_AHEAD_OF_SLASH_PAGES_THAT_ENDS_WITH_DOT_MD_OR_MDX
       )?.[1];
 
     const arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =
       stringExtractedByMatchingForSrcAnyUnlimitedAmountOfCharactersThenDotMdx
         ? currentFile?.match(
-            Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
+            Regex.STRING_AHEAD_OF_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
           )
         : null;
 
@@ -68,13 +70,15 @@ export default function astroMarkdownLayoutUrlInjector({
     }
 
     const secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash =
-      arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash[1];
-    
-    const accsessedValueFromLayoutsMapOrTheDefaultValue =
+      arrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash[
+        secondIndex
+      ];
+
+    const accessedValueFromLayoutsMapOrTheDefaultValue =
       layoutsMap[
         secondMatchFromArrayCreatedByLookingAheadOfSrcSlashPagesForAnyCharacterEndingInAForwardSlash
       ] ?? layoutsMap.default;
 
-    file.data.astro.frontmatter.layout = `/${sourceFolder}${accsessedValueFromLayoutsMapOrTheDefaultValue}.astro`;
+    file.data.astro.frontmatter.layout = `/${sourceFolder}${accessedValueFromLayoutsMapOrTheDefaultValue}.astro`;
   };
 }

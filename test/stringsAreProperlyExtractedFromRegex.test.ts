@@ -1,8 +1,5 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
-import {
-  Regex,
-} from "../lib";
-
+import { Regex } from "../lib";
 
 describe("Strings are extracted properly from the regex's used", () => {
   const inputString = "/src/pages/post-two.md";
@@ -14,7 +11,7 @@ describe("Strings are extracted properly from the regex's used", () => {
 
   it("matches the STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX ", () => {
     const result = inputString.match(
-      Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX
+      Regex.STRING_AHEAD_OF_SLASH_PAGES_THAT_ENDS_WITH_DOT_MD_OR_MDX
     );
 
     expectTypeOf(result).toBeArray();
@@ -26,7 +23,7 @@ describe("Strings are extracted properly from the regex's used", () => {
 
   it("matches the STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH", () => {
     const result = inputStringWithFolderBeyondPages.match(
-      Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_A_SLASH
+      Regex.STRING_AHEAD_OF_SLASH_PAGES_THAT_ENDS_WITH_A_SLASH
     );
 
     expectTypeOf(result).toBeArray();
@@ -38,7 +35,7 @@ describe("Strings are extracted properly from the regex's used", () => {
 
   it("STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX has the match at at the one index", () => {
     const result = inputString.match(
-      Regex.STRING_AHEAD_OF_SLASH_PAGES_OR_CONTENT_THAT_ENDS_WITH_DOT_MD_OR_MDX
+      Regex.STRING_AHEAD_OF_SLASH_PAGES_THAT_ENDS_WITH_DOT_MD_OR_MDX
     )!;
 
     expect(result).toHaveLength(2);
@@ -56,6 +53,4 @@ describe("Strings are extracted properly from the regex's used", () => {
   //   expect(result[0]).not.toBe(null);
   //   expect(result[0]).toBe(expectedFolderOutput);
   // });
-
-  
 });
